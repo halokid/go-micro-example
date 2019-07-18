@@ -31,9 +31,11 @@ func (this *Greeter) Hello(ctx context.Context, req *go_api.Request, rsp *go_api
 }
 
 func main() {
+	// 配置熔断器
 	hystrix.Configure([]string{"go.micro.api.user.User.GetUserInfo"})
 	greeterService := micro.NewService(
 		micro.Name(micro_c.MicroNameGreeter),
+		// 给服务加上装饰器， 用熔断器来装饰服务
 		micro.WrapClient(hystrix.NewClientWrapper()),
 		micro.Flags(
 			cli.StringFlag{
